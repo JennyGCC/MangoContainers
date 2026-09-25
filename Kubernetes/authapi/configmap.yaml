@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: authapi-config
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ASPNETCORE_HTTP_PORTS: "8080"
+  DOTNET_RUNNING_IN_CONTAINER: "true"
+  ApiSettings__JwtOptions__Issuer: "mango-auth-api"
+  ApiSettings__JwtOptions__Audience: "mango-client"
+  TopicAndQueueNames__RegisterUserQueue: "emailregisteruser"

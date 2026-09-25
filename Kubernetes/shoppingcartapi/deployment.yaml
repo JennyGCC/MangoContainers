@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shoppingcartapi
+  labels:
+    app: shoppingcartapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shoppingcartapi
+  template:
+    metadata:
+      labels:
+        app: shoppingcartapi
+    spec:
+      containers:
+      - name: shoppingcartapi
+        image: mango-shoppingcartapi-k8s:local
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: shoppingcartapi-config
+        - secretRef:
+            name: shoppingcartapi-secret

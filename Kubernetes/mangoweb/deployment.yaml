@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mangoweb
+  labels:
+    app: mangoweb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mangoweb
+  template:
+    metadata:
+      labels:
+        app: mangoweb
+    spec:
+      containers:
+      - name: mangoweb
+        image: mango-mangoweb-k8s:local
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: mangoweb-config

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shoppingcartapi-config
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ASPNETCORE_HTTP_PORTS: "8080"
+  DOTNET_RUNNING_IN_CONTAINER: "true"
+  Docker__ServiceUrls__ProductAPI: "http://productapi:8080"
+  Docker__ServiceUrls__CouponAPI: "http://couponapi:8080"
+  TopicAndQueueNames__EmailShoppingCartQueue: "emailshoppingcart"
+  ApiSettings__Issuer: "mango-auth-api"
+  ApiSettings__Audience: "mango-client"

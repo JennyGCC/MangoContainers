@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: couponapi
+  labels:
+    app: couponapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: couponapi
+  template:
+    metadata:
+      labels:
+        app: couponapi
+    spec:
+      containers:
+      - name: couponapi
+        image: mango-couponapi-k8s:local
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: couponapi-config
+        - secretRef:
+            name: couponapi-secret

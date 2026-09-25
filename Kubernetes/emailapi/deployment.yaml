@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emailapi
+  labels:
+    app: emailapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emailapi
+  template:
+    metadata:
+      labels:
+        app: emailapi
+    spec:
+      containers:
+      - name: emailapi
+        image: mango-emailapi-k8s:local
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: emailapi-config
+        - secretRef:
+            name: emailapi-secret

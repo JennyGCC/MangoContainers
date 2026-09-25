@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orderapi-config
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ASPNETCORE_HTTP_PORTS: "8080"
+  DOTNET_RUNNING_IN_CONTAINER: "true"
+  Docker__ServiceUrls__ProductAPI: "http://productapi:8080"
+  ApiSettings__Issuer: "mango-auth-api"
+  ApiSettings__Audience: "mango-client"

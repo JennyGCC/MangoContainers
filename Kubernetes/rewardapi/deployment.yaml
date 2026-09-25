@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rewardapi
+  labels:
+    app: rewardapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rewardapi
+  template:
+    metadata:
+      labels:
+        app: rewardapi
+    spec:
+      containers:
+      - name: rewardapi
+        image: mango-rewardapi-k8s:local
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: rewardapi-config
+        - secretRef:
+            name: rewardapi-secret
