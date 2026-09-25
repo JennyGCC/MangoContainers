@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mango-shoppingcart
+  namespace: mango
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mango-shoppingcart
+  template:
+    metadata:
+      labels:
+        app: mango-shoppingcart
+    spec:
+      containers:
+        - name: mango-shoppingcart
+          image: mangoservicesshoppingcartapi:local
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+
+          envFrom:
+            - configMapRef:
+                name: mango-common-config
+                
+          env:
+            - name: ApiSettings__Secret
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secrets
+                  key: ShoppingCart__ApiSettings__Secret
+
+            - name: Docker__ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secrets
+                  key: ShoppingCart__ConnectionStrings__DefaultConnection
+
+            - name: Docker__ServiceUrls__ProductAPI
+              value: http://mango-product:8080
+
+            - name: Docker__ServiceUrls__CouponAPI
+              value: http://mango-coupon:8080
+
+            - name: TopicAndQueueNames__EmailShoppingCartQueue
+              value: emailshoppingcart
