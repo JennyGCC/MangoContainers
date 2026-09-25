@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mango-coupon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mango-coupon
+  template:
+    metadata:
+      labels:
+        app: mango-coupon
+    spec:
+      containers:
+        - name: mango-coupon
+          image: mangocouponapi:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: DOTNET_RUNNING_IN_CONTAINER
+              value: "true"
+
+            - name: Docker__ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: COUPON_DB_CONNECTION
+
+            - name: ASPNETCORE_HTTP_PORTS
+              value: "8080"
+
+            - name: ApiSettings__Secret
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: JWT_SECRET
+
+            - name: ApiSettings__Issuer
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: JWT_ISSUER
+
+            - name: ApiSettings__Audience
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: JWT_AUDIENCE

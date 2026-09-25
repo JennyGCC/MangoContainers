@@ -1,0 +1,33 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: mango
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - secret.yaml
+
+  - auth/deployment.yaml
+  - auth/service.yaml
+
+  - product/deployment.yaml
+  - product/service.yaml
+
+  - coupon/deployment.yaml
+  - coupon/service.yaml
+
+  - email/deployment.yaml
+  - email/service.yaml
+
+  - order/deployment.yaml
+  - order/service.yaml
+
+  - reward/deployment.yaml
+  - reward/service.yaml
+
+  - shoppingcart/deployment.yaml
+  - shoppingcart/service.yaml
+
+  - web/deployment.yaml
+  - web/service.yaml

@@ -1,0 +1,8 @@
+Start-Process powershell -ArgumentList '-NoExit', '-Command', 'kubectl port-forward svc/mango-auth 5005:8080 -n mango'
+Start-Process powershell -ArgumentList '-NoExit', '-Command', 'kubectl port-forward svc/mango-email 5216:8080 -n mango'
+Start-Process powershell -ArgumentList '-NoExit', '-Command', 'kubectl port-forward svc/mango-coupon 5104:8080 -n mango'
+Start-Process powershell -ArgumentList '-NoExit', '-Command', 'kubectl port-forward svc/mango-order 5201:8080 -n mango'
+Start-Process powershell -ArgumentList '-NoExit', '-Command', 'kubectl port-forward svc/mango-product 5156:8080 -n mango'
+Start-Process powershell -ArgumentList '-NoExit', '-Command', 'kubectl port-forward svc/mango-reward 5202:8080 -n mango'
+Start-Process powershell -ArgumentList '-NoExit', '-Command', 'kubectl port-forward svc/mango-shoppingcart 5220:8080 -n mango'
+Start-Process powershell -ArgumentList '-NoExit', '-Command', 'kubectl port-forward svc/mango-web 5048:8080 -n mango'

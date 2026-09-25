@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mango-shoppingcart
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mango-shoppingcart
+  template:
+    metadata:
+      labels:
+        app: mango-shoppingcart
+    spec:
+      containers:
+        - name: mango-shoppingcart
+          image: mangoshoppingcartapi:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: DOTNET_RUNNING_IN_CONTAINER
+              value: "true"
+
+            - name: Docker__ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: SHOPPINGCART_DB_CONNECTION
+            - name: ASPNETCORE_HTTP_PORTS
+              value: "8080"
+
+            - name: ServiceUrls__ProductAPI
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: PRODUCT_URL
+
+            - name: ServiceUrls__CouponAPI
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: COUPON_URL
+
+            - name: MessageQueue__RabbitMQ__HostName
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: RABBITMQ_HOST
+
+            - name: MessageQueue__RabbitMQ__Port
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: RABBITMQ_PORT
+
+            - name: MessageQueue__RabbitMQ__UserName
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: RABBITMQ_USERNAME
+
+            - name: MessageQueue__RabbitMQ__Password
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: RABBITMQ_PASSWORD
+
+            - name: ApiSettings__Secret
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: JWT_SECRET
+
+            - name: ApiSettings__Issuer
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: JWT_ISSUER
+
+            - name: ApiSettings__Audience
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: JWT_AUDIENCE

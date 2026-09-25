@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mango-email
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mango-email
+  template:
+    metadata:
+      labels:
+        app: mango-email
+    spec:
+      containers:
+        - name: mango-email
+          image: mangoemailapi:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+
+            - name: DOTNET_RUNNING_IN_CONTAINER
+              value: "true"
+
+            - name: Docker__ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: EMAIL_DB_CONNECTION
+
+            - name: ASPNETCORE_HTTP_PORTS
+              value: "8080"
+
+            - name: MessageQueue__RabbitMQ__ConnectionString
+              value: "amqp://guest:guest@host.minikube.internal:5672"
+
+            - name: MessageQueue__RabbitMQ__HostName
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: RABBITMQ_HOST
+
+            - name: MessageQueue__RabbitMQ__Port
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: RABBITMQ_PORT
+
+            - name: MessageQueue__RabbitMQ__UserName
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: RABBITMQ_USERNAME
+
+            - name: MessageQueue__RabbitMQ__Password
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: RABBITMQ_PASSWORD

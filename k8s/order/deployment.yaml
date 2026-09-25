@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mango-order
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mango-order
+  template:
+    metadata:
+      labels:
+        app: mango-order
+    spec:
+      containers:
+        - name: mango-order
+          image: mangoorderapi:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: DOTNET_RUNNING_IN_CONTAINER
+              value: "true"
+
+            - name: Docker__ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: ORDER_DB_CONNECTION
+            - name: ASPNETCORE_HTTP_PORTS
+              value: "8080"
+
+            - name: ServiceUrls__ProductAPI
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: PRODUCT_URL
+
+            - name: MessageQueue__RabbitMQ__HostName
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: RABBITMQ_HOST
+
+            - name: MessageQueue__RabbitMQ__Port
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: RABBITMQ_PORT
+
+            - name: MessageQueue__RabbitMQ__UserName
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: RABBITMQ_USERNAME
+
+            - name: MessageQueue__RabbitMQ__Password
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: RABBITMQ_PASSWORD
+
+            - name: ApiSettings__Secret
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: JWT_SECRET
+
+            - name: ApiSettings__Issuer
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: JWT_ISSUER
+
+            - name: ApiSettings__Audience
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: JWT_AUDIENCE

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mango-config
+data:
+  SQL_SERVER_HOST: "host.minikube.internal"
+  RABBITMQ_HOST: "host.minikube.internal"
+  RABBITMQ_PORT: "5672"
+
+  JWT_ISSUER: "mango-auth-api"
+  JWT_AUDIENCE: "mango-client"
+
+  AUTH_URL: "http://mango-auth:8080"
+  PRODUCT_URL: "http://mango-product:8080"
+  COUPON_URL: "http://mango-coupon:8080"
+  EMAIL_URL: "http://mango-email:8080"
+  ORDER_URL: "http://mango-order:8080"
+  REWARD_URL: "http://mango-reward:8080"
+  SHOPPINGCART_URL: "http://mango-shoppingcart:8080"

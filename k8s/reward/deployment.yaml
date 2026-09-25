@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mango-reward
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mango-reward
+  template:
+    metadata:
+      labels:
+        app: mango-reward
+    spec:
+      containers:
+        - name: mango-reward
+          image: mangorewardapi:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: DOTNET_RUNNING_IN_CONTAINER
+              value: "true"
+
+            - name: Docker__ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: REWARD_DB_CONNECTION
+            - name: ASPNETCORE_HTTP_PORTS
+              value: "8080"

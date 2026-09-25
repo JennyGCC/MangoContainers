@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mango-auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mango-auth
+  template:
+    metadata:
+      labels:
+        app: mango-auth
+    spec:
+      containers:
+        - name: mango-auth
+          image: mangoauthapi:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: DOTNET_RUNNING_IN_CONTAINER
+              value: "true"
+
+            - name: ApiSettings__Secret
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: JWT_SECRET
+
+            - name: ApiSettings__Issuer
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: JWT_ISSUER
+
+            - name: ApiSettings__Audience
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: JWT_AUDIENCE
+
+            - name: Docker__ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: AUTH_DB_CONNECTION
+
+            - name: Docker__ASPNETCORE_HTTP_PORTS
+              value: "8080"
+
+            - name: Docker__MessageQueue__RabbitMQ__HostName
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: RABBITMQ_HOST
+
+            - name: MessageQueue__RabbitMQ__UserName
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: RABBITMQ_USERNAME
+
+            - name: MessageQueue__RabbitMQ__Password
+              valueFrom:
+                secretKeyRef:
+                  name: mango-secret
+                  key: RABBITMQ_PASSWORD
+
+            - name: TopicAndQueueNames__RegisterUserQueue
+              value: "emailregisteruser"

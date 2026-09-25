@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mango-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mango-web
+  template:
+    metadata:
+      labels:
+        app: mango-web
+    spec:
+      containers:
+        - name: mango-web
+          image: mangoweb:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: DOTNET_RUNNING_IN_CONTAINER
+              value: "true"
+
+            - name: ASPNETCORE_HTTP_PORTS
+              value: "8080"
+
+            - name: ServiceUrls__AuthAPI
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: AUTH_URL
+
+            - name: ServiceUrls__ProductAPI
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: PRODUCT_URL
+
+            - name: ServiceUrls__CouponAPI
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: COUPON_URL
+
+            - name: ServiceUrls__OrderAPI
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: ORDER_URL
+
+            - name: ServiceUrls__ShoppingCartAPI
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: SHOPPINGCART_URL
+
+            - name: ServiceUrls__RewardAPI
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: REWARD_URL
+
+            - name: ServiceUrls__EmailAPI
+              valueFrom:
+                configMapKeyRef:
+                  name: mango-config
+                  key: EMAIL_URL
